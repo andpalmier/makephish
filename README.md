@@ -73,20 +73,20 @@ $ $ php -S localhost:8000
 At this point, if you go to `localhost:8000` you should find something like this:
 
 <p align="center">
-  <img alt="fakeGH" src="https://github.com/andpalmier/makephish/blob/master/img/fakeGH.png?raw=true" />
+  <img alt="fakeGH" src="https://github.com/andpalmier/makephish/blob/main/img/fakeGH.png?raw=true" />
 </p>
 
 If you enter some random credentials, you will note that you will be redirected to the real `github.com` login page:
 
 <p align="center">
-  <img alt="realGH" src="https://github.com/andpalmier/makephish/blob/master/img/realGH.png?raw=true" />
+  <img alt="realGH" src="https://github.com/andpalmier/makephish/blob/main/img/realGH.png?raw=true" />
 </p>
 
 If you didn't modify the `phish.php` file, you can find the credentials you just enetered in `localhost:8000/log`:
 
 
 <p align="center">
-  <img alt="logs" src="https://github.com/andpalmier/makephish/blob/master/img/logs.png?raw=true" />
+  <img alt="logs" src="https://github.com/andpalmier/makephish/blob/main/img/logs.png?raw=true" />
 </p>
 
 ### PHP capabilities
