@@ -70,7 +70,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "\n\nEmpty URL, please specify a URL using the -u flag.\n")
 		os.Exit(1)
 
-	// remove / from end of url
+		// remove / from end of url
 	} else if string(urlin[len(urlin)-1]) == "/" {
 		urlin = urlin[0 : len(urlin)-1]
 	}

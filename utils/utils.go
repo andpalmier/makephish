@@ -7,7 +7,7 @@ import (
 	"regexp"
 )
 
-// MkdirIfNotExist(dirpath string): create a directory if it does not exists
+// MkdirIfNotExist (dirpath string): create a directory if it does not exists
 func MkdirIfNotExist(dir string) error {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		err = os.MkdirAll(dir, 0755)
@@ -18,7 +18,7 @@ func MkdirIfNotExist(dir string) error {
 	return nil
 }
 
-// PatchHtml(destFolder string): patch html file to take local instances of css and js instead of the remote paths
+// PatchHtml (destFolder string): patch html file to take local instances of css and js instead of the remote paths
 func PatchHtml(destFolder string, remotePaths []string, localPaths []string, postPath string, phpFilename string) error {
 
 	// open html file

