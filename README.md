@@ -18,33 +18,38 @@ The purpose of this project is purely educative: I wrote `makephish` to get fami
 After downloading the repository, navigate into the directory and build the project:
 
 ```
-$ go build makephish.go
+$ make makephish
 ```
 
-This will create an executable called `makephish`. You can then run the executable with the following flags:
+This will create a folder `build` with an executable called `makephish`. You can run the executable with the following flags:
 
-- `-u`: URL of login page
-- `-a`: User Agent string, by defefault *"Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0"*
-- `-p`: Path to the PHP file to be used, by default *"phish.php"*
-- `-d`: Path used to store the kits, by default *"./kits"*
+- `-url`: URL of login page
+- `-ua`: User Agent string, by defefault *"Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0"*
+- `-php`: Path to the PHP file to be used, by default *"phish.php"*
+- `-kits`: Path used to store the kits, by default *"./kits"*
 
 
 ### Example
 
 ```
-$ ./makephish -u "https://github.com/login/"
+$ ./build/makephish -url "https://github.com/login/"
 
+           _           _   _     _
+ _____  __| |_ ___ ___| |_|_|___| |_
+|     ||. | '_| -_| . |   | |_ -|   |
+|_|_|_|___|_|_|___|  _|_|_|_|___|_|_|
+                  |_|
 
 
 Navigating to https://github.com/login using the following User agent string: Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0
 Parameters found in the form of the given URL:
- post action = /session
- login attribute name = login
- password attribute name = password
-
+ - post action = /session
+ - login attribute name = login
+ - password attribute name = password
 HTML file patched and saved in kits/github.com
 PHP file saved in kits/github.com
-[!] Operation completed! Created a kit for https://github.com/login and saved in kits/github.com
+
+[*] operation completed! kit created for https://github.com/login and saved in kits/github.com
 
 $ tree kits/github.com
 kits/github.com
@@ -65,9 +70,8 @@ kits/github.com
 1 directory, 12 files
 
 $ cd kits/github.com
-$ $ php -S localhost:8000
+$ php -S localhost:8000
 [Sun Jan 10 12:10:54 2021] PHP 7.4.14 Development Server (http://localhost:8000) started
-
 ```
 
 At this point, if you go to `localhost:8000` you should find something like this:

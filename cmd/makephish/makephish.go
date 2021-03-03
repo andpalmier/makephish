@@ -11,7 +11,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gocolly/colly"
-	"makephish/utils"
 	"net/url"
 	"os"
 	"path"
@@ -22,6 +21,16 @@ var (
 	urlin       string
 	agent       string
 	phpFilename string
+	asciiart string =
+`
+           _           _   _     _
+ _____  __| |_ ___ ___| |_|_|___| |_
+|     ||. | '_| -_| . |   | |_ -|   |
+|_|_|_|___|_|_|___|  _|_|_|_|___|_|_|
+                  |_|
+`
+
+
 )
 
 /* getFormPost(url string) (string, string, string): check if there is a post with an action in the url specified and returns:
@@ -58,16 +67,16 @@ func getFormPost(urlin string) (string, string, string) {
 func main() {
 
 	// parse flag and cli inputs
-	flag.StringVar(&urlin, "u", "", "URL of login page")
-	flag.StringVar(&agent, "a", "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0", "User Agent string")
-	flag.StringVar(&phpFilename, "p", "phish.php", "Path to the PHP file to be used")
-	flag.StringVar(&destFolder, "d", "kits", "Path used to store the kits")
+	flag.StringVar(&urlin, "url", "", "URL of login page")
+	flag.StringVar(&agent, "ua", "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0", "User Agent string")
+	flag.StringVar(&phpFilename, "php", "phish.php", "Path to the PHP file to be used")
+	flag.StringVar(&destFolder, "kits", "kits", "Path used to store the kits")
 
 	flag.Parse()
 
 	// check if url was provided
 	if urlin == "" {
-		fmt.Fprintf(os.Stderr, "\n\nEmpty URL, please specify a URL using the -u flag.\n")
+		fmt.Fprintf(os.Stderr, "\nEmpty URL, please specify a URL using the -u flag.\n")
 		os.Exit(1)
 
 		// remove / from end of url
@@ -75,19 +84,19 @@ func main() {
 		urlin = urlin[0 : len(urlin)-1]
 	}
 
+	fmt.Println(asciiart)
 	// Instantiate default collector
 	c := colly.NewCollector(colly.UserAgent(agent))
 
 	// get parameters of the form in the HTML
-	fmt.Printf("\n\nNavigating to %s using the following User agent string: %s \n", urlin, agent)
+	fmt.Printf("\nNavigating to %s using the following User agent: %s \n", urlin, agent)
 	postPath, postLogin, postPassword := getFormPost(urlin)
 
 	if postPath == "" || postLogin == "" || postPassword == "" {
 		fmt.Fprintf(os.Stderr, "No compatible form found in the given URL!\n")
 		os.Exit(1)
-
 	} else {
-		fmt.Printf("Parameters found in the form of the given URL:\n post action = %s\n login attribute name = %s\n password attribute name = %s\n\n", postPath, postLogin, postPassword)
+		fmt.Printf("Parameters found in the form of the given URL:\n - post action = %s\n - login attribute name = %s\n - password attribute name = %s\n", postPath, postLogin, postPassword)
 	}
 
 	// If given URL does not have a form with a POST: print error
@@ -106,7 +115,7 @@ func main() {
 	urlinPath := p.Path
 
 	// create destination folder
-	if err = utils.MkdirIfNotExist(destFolder); err != nil {
+	if err = MkdirIfNotExist(destFolder); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while creting the destination folder: %s\n", err)
 		os.Exit(1)
 	}
@@ -128,7 +137,7 @@ func main() {
 		fold := path.Dir(p.EscapedPath())
 		filename := path.Base(p.EscapedPath())
 		if fold != "" {
-			if err := utils.MkdirIfNotExist(destFolder + "/" + fold); err != nil {
+			if err := MkdirIfNotExist(destFolder + "/" + fold); err != nil {
 				fmt.Fprintf(os.Stderr, ": Error while creating the directory to save files: %s\n", err)
 				os.Exit(1)
 			}
@@ -170,7 +179,7 @@ func main() {
 	c.Visit(urlin)
 
 	// save and patch the HTML file to make it compatible with the PHP
-	if err := utils.PatchHtml(destFolder, remotePaths, localPaths, postPath, phpFilename); err != nil {
+	if err := PatchHtml(destFolder, remotePaths, localPaths, postPath, phpFilename); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while patching the HTML: %s\n", err)
 		os.Exit(1)
 	} else {
@@ -178,7 +187,7 @@ func main() {
 	}
 
 	// copy PHP file in the dest folder
-	if err := utils.CopyPhpToKit(phpFilename, destFolder); err != nil {
+	if err := CopyPhpToKit(phpFilename, destFolder); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while copying the PHP file in the destination folder: %s\n", err)
 		os.Exit(1)
 	} else {
@@ -186,12 +195,12 @@ func main() {
 	}
 
 	// patch the PHP file in order to make the kit work
-	if err := utils.PatchPhp(destFolder+"/"+phpFilename, postLogin, postPassword, urlin); err != nil {
+	if err := PatchPhp(destFolder+"/"+phpFilename, postLogin, postPassword, urlin); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while patching the PHP file: %s\n", err)
 		os.Exit(1)
 
 		// IT WORKED!
 	} else {
-		fmt.Printf("[!] Operation completed! Created a kit for %s and saved in %s\n\n", urlin, destFolder)
+		fmt.Printf("\n[*] operation completed! kit created for %s and saved in %s\n\n", urlin, destFolder)
 	}
 }
