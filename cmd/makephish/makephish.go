@@ -113,7 +113,7 @@ func main() {
 	urlinPath := p.Path
 
 	// create destination folder
-	if err = MkdirIfNotExist(destFolder); err != nil {
+	if err = mkdirIfNotExist(destFolder); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while creting the destination folder: %s\n", err)
 		os.Exit(1)
 	}
@@ -135,7 +135,7 @@ func main() {
 		fold := path.Dir(p.EscapedPath())
 		filename := path.Base(p.EscapedPath())
 		if fold != "" {
-			if err := MkdirIfNotExist(destFolder + "/" + fold); err != nil {
+			if err := mkdirIfNotExist(destFolder + "/" + fold); err != nil {
 				fmt.Fprintf(os.Stderr, ": Error while creating the directory to save files: %s\n", err)
 				os.Exit(1)
 			}
@@ -177,7 +177,7 @@ func main() {
 	c.Visit(urlin)
 
 	// save and patch the HTML file to make it compatible with the PHP
-	if err := PatchHtml(destFolder, remotePaths, localPaths, postPath, phpFilename); err != nil {
+	if err := patchHtml(destFolder, remotePaths, localPaths, postPath, phpFilename); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while patching the HTML: %s\n", err)
 		os.Exit(1)
 	} else {
@@ -185,7 +185,7 @@ func main() {
 	}
 
 	// copy PHP file in the dest folder
-	if err := CopyPhpToKit(phpFilename, destFolder); err != nil {
+	if err := copyPhpToKit(phpFilename, destFolder); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while copying the PHP file in the destination folder: %s\n", err)
 		os.Exit(1)
 	} else {
@@ -193,7 +193,7 @@ func main() {
 	}
 
 	// patch the PHP file in order to make the kit work
-	if err := PatchPhp(destFolder+"/"+phpFilename, postLogin, postPassword, urlin); err != nil {
+	if err := patchPhp(destFolder+"/"+phpFilename, postLogin, postPassword, urlin); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while patching the PHP file: %s\n", err)
 		os.Exit(1)
 
