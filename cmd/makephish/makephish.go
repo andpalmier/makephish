@@ -1,8 +1,6 @@
 /*
-
 - MAKEPHISH -
-Automatically clone simple websites with a form and patch them with PHP to create phishing pages
-
+Automatically clone and patch simple websites to create phishing pages
 */
 
 package main
