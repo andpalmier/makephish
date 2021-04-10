@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 )
 
 var (
@@ -74,7 +75,7 @@ func main() {
 
 	// check if url was provided
 	if urlin == "" {
-		fmt.Fprintf(os.Stderr, "\nEmpty URL, please specify a URL using the -u flag.\n")
+		fmt.Fprintf(os.Stderr, "\nEmpty URL, please specify a URL using the -url flag.\n")
 		os.Exit(1)
 
 		// remove / from end of url
@@ -109,7 +110,7 @@ func main() {
 	}
 
 	// prepare folder for saving files
-	destFolder = destFolder + "/" + p.Host
+	destFolder = filepath.Join(destFolder, p.Host)
 	urlinPath := p.Path
 
 	// create destination folder
@@ -135,7 +136,7 @@ func main() {
 		fold := path.Dir(p.EscapedPath())
 		filename := path.Base(p.EscapedPath())
 		if fold != "" {
-			if err := mkdirIfNotExist(destFolder + "/" + fold); err != nil {
+			if err := mkdirIfNotExist(filepath.Join(destFolder, fold)); err != nil {
 				fmt.Fprintf(os.Stderr, ": Error while creating the directory to save files: %s\n", err)
 				os.Exit(1)
 			}
@@ -145,11 +146,11 @@ func main() {
 		if urlinPath == pathfile {
 			filename = "index.html"
 		} else {
-			localPaths = append(localPaths, fold+"/"+filename)
+			localPaths = append(localPaths, filepath.Join(fold, filename))
 		}
 
 		// save file in appropriate directory
-		if err = resp.Save(destFolder + fold + "/" + filename); err != nil {
+		if err = resp.Save(filepath.Join(destFolder + fold,filename)); err != nil {
 			fmt.Fprintf(os.Stderr, "Error while saving file in the appropriate directory: %s\n", err)
 			os.Exit(1)
 		}
@@ -193,7 +194,7 @@ func main() {
 	}
 
 	// patch the PHP file in order to make the kit work
-	if err := patchPhp(destFolder+"/"+phpFilename, postLogin, postPassword, urlin); err != nil {
+	if err := patchPhp(filepath.Join(destFolder, phpFilename), postLogin, postPassword, urlin); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while patching the PHP file: %s\n", err)
 		os.Exit(1)
 
