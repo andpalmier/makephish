@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"io/ioutil"
-	"path/filepath"
+	"path"
 )
 
 // copyPhpToKit (phpfilename string, destFolder string): copy PHP file in destFolder
@@ -16,7 +16,7 @@ func copyPhpToKit(phpfilename string, destFolder string) error {
 	}
 
 	// create file in dest folder
-	err = ioutil.WriteFile(filepath.Join(destFolder, phpfilename), phpfile, 0644)
+	err = ioutil.WriteFile(path.Join(destFolder, phpfilename), phpfile, 0644)
 	if err != nil {
 		return err
 	}
