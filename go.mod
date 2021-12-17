@@ -1,4 +1,4 @@
-module makephish
+module github.com/andpalmier/makephish
 
 go 1.17
 
