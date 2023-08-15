@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"html"
-	"io/ioutil"
+	"os"
 	"path"
 )
 
@@ -11,13 +11,13 @@ import (
 func copyPhpToKit(phpfilename string, destFolder string) error {
 
 	// check if PHP file exists
-	phpfile, err := ioutil.ReadFile(phpfilename)
+	phpfile, err := os.ReadFile(phpfilename)
 	if err != nil {
 		return err
 	}
 
 	// create file in dest folder
-	err = ioutil.WriteFile(path.Join(destFolder, phpfilename), phpfile, 0644)
+	err = os.WriteFile(path.Join(destFolder, phpfilename), phpfile, 0644)
 	if err != nil {
 		return err
 	}
@@ -28,7 +28,7 @@ func copyPhpToKit(phpfilename string, destFolder string) error {
 func patchPhp(phppath string, postLogin string, postPassword string, urlin string) error {
 
 	// open new php file
-	read, err := ioutil.ReadFile(phppath)
+	read, err := os.ReadFile(phppath)
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func patchPhp(phppath string, postLogin string, postPassword string, urlin strin
 	// replace landing page with destination URL
 	newContents = bytes.Replace(newContents, []byte("header('Location: \"\"');"), []byte("header('Location: "+urlin+"');"), -1)
 
-	err = ioutil.WriteFile(phppath, newContents, 0)
+	err = os.WriteFile(phppath, newContents, 0)
 	if err != nil {
 		return err
 	}

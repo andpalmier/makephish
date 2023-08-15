@@ -9,12 +9,12 @@
   </p>
 </p>
 
-
 This is a proof of concept to automatically create phishing kits based on a specified URL, **please note that** `makephish` **will work exclusively on websites having a simple pages with** `<form>` **logins.**
 
 The purpose of this project is purely educative: I wrote `makephish` to get familiar with Go, this also means that the code is poorly written and organized. The idea of the project is also to show how easy it is to clone a website and use it to create phishing pages.
 
-## Usage
+## Install
+
 
 After downloading the repository, navigate into the directory and build the project:
 
@@ -23,6 +23,8 @@ $ make makephish
 ```
 
 This will create a folder `build` with an executable called `makephish`. You can run the executable with the following flags:
+
+## Usage
 
 - `-url`: URL of login page
 - `-ua`: User Agent string, by defefault *"Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0"*

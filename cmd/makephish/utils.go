@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"regexp"
 )
@@ -34,7 +33,7 @@ func patchHtml(destFolder string, remotePaths []string, localPaths []string, pos
 	// open html file
 	path := destFolder + "/index.html"
 
-	read, err := ioutil.ReadFile(path)
+	read, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
@@ -56,7 +55,7 @@ func patchHtml(destFolder string, remotePaths []string, localPaths []string, pos
 	newContents = bytes.Replace(newContents, []byte(m[0][0]), []byte("action=\"/"+phpFilename+"\""), -1)
 
 	// write patched html in destination
-	err = ioutil.WriteFile(path, newContents, 0)
+	err = os.WriteFile(path, newContents, 0)
 	if err != nil {
 		return err
 	}

