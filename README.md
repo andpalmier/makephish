@@ -1,28 +1,28 @@
 # makephish
 
 <p align="center">
-  <img alt="makephish" src="https://github.com/andpalmier/makephish/blob/main/img/makephish.png?raw=true" />
-  <p align="center">
-    <a href="https://github.com/andpalmier/makephish/blob/master/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-GPL3-brightgreen.svg?style=flat-square"></a>
-    <a href="https://goreportcard.com/report/github.com/andpalmier/makephish"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/andpalmier/goransom?style=flat-square"></a>
-    <a href="https://twitter.com/intent/follow?screen_name=andpalmier"><img src="https://img.shields.io/twitter/follow/andpalmier?style=social&logo=twitter" alt="follow on Twitter"></a>
+
+![makephish](https://github.com/andpalmier/makephish/blob/main/img/makephish.png?raw=true)
+<p align="center">
+<a href="https://github.com/andpalmier/makephish/blob/master/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-GPL3-brightgreen.svg?style=flat-square"></a>
+<a href="https://goreportcard.com/report/github.com/andpalmier/makephish"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/andpalmier/goransom?style=flat-square"></a>
+<a href="https://twitter.com/intent/follow?screen_name=andpalmier"><img src="https://img.shields.io/twitter/follow/andpalmier?style=social&logo=twitter" alt="follow on Twitter"></a>
   </p>
 </p>
 
-This is a proof of concept to automatically create phishing kits based on a specified URL, **please note that** `makephish` **will work exclusively on websites having a simple pages with** `<form>` **logins.**
+`makephish` is a proof of concept tool designed to automate the creation of phishing kits based on a specified URL. It is important to note that `makephish` works exclusively with websites featuring simple login pages using HTML `<form>` elements.
 
-The purpose of this project is purely educative: I wrote `makephish` to get familiar with Go, this also means that the code is poorly written and organized. The idea of the project is also to show how easy it is to clone a website and use it to create phishing pages.
+The primary objective of this project is educational. I created `makephish` to gain familiarity with Go programming. Consequently, the code may lack optimal organization and quality. Additionally, this project aims to illustrate the ease with which a website can be cloned and repurposed to create phishing pages.
 
 ## Install
 
-
-After downloading the repository, navigate into the directory and build the project:
+After cloning the repository, navigate to the project directory and build the executable:
 
 ```
-$ make makephish
+go build -o makephish cmd/makephish/*.go
 ```
 
-This will create a folder `build` with an executable called `makephish`. You can run the executable with the following flags:
+This will create an executable called `makephish`. You can run the executable with the following flags:
 
 ## Usage
 
@@ -35,7 +35,7 @@ This will create a folder `build` with an executable called `makephish`. You can
 ### Example
 
 ```
-$ ./build/makephish -url "https://github.com/login/"
+$ ./makephish -url "https://github.com/login/"
 
            _           _   _     _
  _____  __| |_ ___ ___| |_|_|___| |_
@@ -79,22 +79,15 @@ $ php -S localhost:8000
 
 At this point, if you go to `localhost:8000` you should find something like this:
 
-<p align="center">
-  <img alt="fakeGH" src="https://github.com/andpalmier/makephish/blob/main/img/fakeGH.png?raw=true" />
-</p>
+![fakeGH](https://github.com/andpalmier/makephish/blob/main/img/fakeGH.png?raw=true)
 
 If you enter some random credentials, you will note that you will be redirected to the real `github.com` login page:
 
-<p align="center">
-  <img alt="realGH" src="https://github.com/andpalmier/makephish/blob/main/img/realGH.png?raw=true" />
-</p>
+![realGH](https://github.com/andpalmier/makephish/blob/main/img/realGH.png?raw=true)
 
-If you didn't modify the `phish.php` file, you can find the credentials you just enetered in `localhost:8000/log`:
+If you didn't modify the `phish.php` file, you can find the credentials you just entered in `localhost:8000/log`:
 
-
-<p align="center">
-  <img alt="logs" src="https://github.com/andpalmier/makephish/blob/main/img/logs.png?raw=true" />
-</p>
+![logs](https://github.com/andpalmier/makephish/blob/main/img/logs.png?raw=true)
 
 ### PHP capabilities
 
