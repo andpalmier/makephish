@@ -36,14 +36,14 @@ func initiateCollector(urlin string) {
 	c := colly.NewCollector(colly.UserAgent(agent))
 
 	// Get parameters of the form in the HTML
-	fmt.Printf("Navigating to %s using the following user agent:\n%s", urlin, agent)
+	fmt.Printf("Navigating to %s using the following user agent: %s\n\n", urlin, agent)
 	postPath, postLogin, postPassword := getFormPost(urlin)
 
 	if postPath == "" || postLogin == "" || postPassword == "" {
-		fmt.Println("[!] error: no compatible form found in the given URL!")
+		fmt.Println("[!] error: no compatible form found in the given URL!\n")
 		os.Exit(1)
 	} else {
-		fmt.Printf("Parameters found in the form of the given URL:\n- post action = %s\n- login attribute name = %s\n- password attribute name = %s\n", postPath, postLogin, postPassword)
+		fmt.Printf("Parameters found in the form of the given URL:\n- post action: '%s'\n- login attribute name: '%s'\n- password attribute name: '%s'\n\n", postPath, postLogin, postPassword)
 	}
 
 	var remotePaths []string
@@ -121,18 +121,18 @@ func initiateCollector(urlin string) {
 
 	// Patch HTML file to make it compatible with the PHP file
 	if err := patchHtml(destFolder, remotePaths, localPaths, phpFilename); err != nil {
-		fmt.Printf("Error patching the HTML: %s\n", err)
+		fmt.Printf("Error patching the HTML: '%s'\n", err)
 		os.Exit(1)
 	} else {
-		fmt.Printf("HTML file patched and saved in %s\n", destFolder)
+		fmt.Printf("HTML file patched and saved in '%s'\n", destFolder)
 	}
 
 	// Copy PHP file to the dest folder
 	if err := copyPhpToKit(phpFilename, destFolder); err != nil {
-		fmt.Printf("Error copying the PHP file in the destination folder: %s\n", err)
+		fmt.Printf("Error copying the PHP file in the destination folder: '%s'\n", err)
 		os.Exit(1)
 	} else {
-		fmt.Printf("PHP file saved in %s\n", destFolder)
+		fmt.Printf("PHP file saved in '%s'\n", destFolder)
 	}
 
 	// Patch the PHP file to make the kit work
@@ -140,6 +140,6 @@ func initiateCollector(urlin string) {
 		fmt.Printf("Error patching the PHP file: %s\n", err)
 		os.Exit(1)
 	} else {
-		fmt.Printf("\n[*] Operation completed! Kit created for %s and saved in %s\n\n", urlin, destFolder)
+		fmt.Printf("\n[*] Operation completed! Kit created for '%s' and saved in '%s'\n", urlin, destFolder)
 	}
 }
