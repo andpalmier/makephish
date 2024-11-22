@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/gocolly/colly"
 	"net/url"
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/gocolly/colly"
 )
 
 // getFormPost checks if there is a POST with an action and returns the path, login attribute name, and password attribute name.
-func getFormPost(urlin string) (string, string, string) {
+func getFormPost(urlin string, agent string) (string, string, string) {
 	c := colly.NewCollector(colly.UserAgent(agent))
 
 	var postPath, postLogin, postPassword string
@@ -32,15 +33,15 @@ func getFormPost(urlin string) (string, string, string) {
 	return postPath, postLogin, postPassword
 }
 
-func initiateCollector(urlin string) {
+func initiateCollector(urlin string, agent string, destFolder string, phpFilename string) {
 	c := colly.NewCollector(colly.UserAgent(agent))
 
 	// Get parameters of the form in the HTML
 	fmt.Printf("Navigating to %s using the following user agent: %s\n\n", urlin, agent)
-	postPath, postLogin, postPassword := getFormPost(urlin)
+	postPath, postLogin, postPassword := getFormPost(urlin, agent)
 
 	if postPath == "" || postLogin == "" || postPassword == "" {
-		fmt.Println("[!] error: no compatible form found in the given URL!\n")
+		fmt.Printf("[!] error: no compatible form found in the given URL!\n\n")
 		os.Exit(1)
 	} else {
 		fmt.Printf("Parameters found in the form of the given URL:\n- post action: '%s'\n- login attribute name: '%s'\n- password attribute name: '%s'\n\n", postPath, postLogin, postPassword)
