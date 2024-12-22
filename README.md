@@ -1,11 +1,13 @@
 # makephish
 
 <p align="center">
+
 ![makephish](https://github.com/andpalmier/makephish/blob/main/img/makephish.png?raw=true)
+
 <p align="center">
 <a href="https://github.com/andpalmier/makephish/blob/master/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-GPL3-brightgreen.svg?style=flat-square"></a>
 <a href="https://goreportcard.com/report/github.com/andpalmier/makephish"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/andpalmier/goransom?style=flat-square"></a>
-<a href="https://x.com/intent/follow?screen_name=andpalmier"><img src="https://img.shields.io/x/follow/andpalmier?style=social&logo=x" alt="follow on X"></a>
+<a href="https://x.com/intent/follow?screen_name=andpalmier"><img src="https://img.shields.io/twitter/follow/andpalmier?style=social&logo=X" alt="follow on X"></a>
 </p>
 </p>
 
