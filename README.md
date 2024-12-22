@@ -33,7 +33,7 @@ This will create an executable called `makephish`. You can run the executable wi
 
 ### Example
 
-```sh
+```
 $ ./makephish -url "https://github.com/login/"
 
            _           _   _     _
@@ -91,6 +91,7 @@ If you didn't modify the `phish.php` file, you can find the credentials you just
 ### PHP capabilities
 
 A simple PHP file is provided in this repo, but you can easily adjust it to your needs. By default, the file will save username, password, User Agent string, and IP of the victim in a log file. You can disable this option by removing the content of the variable `log`. You can also specify an email address to send these details via email every time a new victim enters the credentials.
+
 ```
 $exfilemail = ""; // -> enter an email address to send the details via email
 $logpath = "log"; // -> make this variable empty to disable logging feature
