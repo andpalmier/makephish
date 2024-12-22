@@ -4,3 +4,4 @@ makephish
 .idea/
 build/
 .gitignore
+.DS_Store

